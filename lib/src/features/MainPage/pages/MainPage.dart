@@ -1,12 +1,10 @@
-import 'dart:developer';
-
-import 'package:bet/src/core/components/AuthButton.dart';
 import 'package:bet/src/core/components/app_text.dart';
 import 'package:bet/src/core/network/states/status.dart';
 import 'package:bet/src/features/Auth/Register/controller/register_controller.dart';
 import 'package:bet/src/features/MainPage/controller/main_controller.dart';
 import 'package:bet/src/features/MainPage/repository/dto/match_dto.dart';
 import 'package:bet/src/features/MainPage/widget/GameType.dart';
+import 'package:bet/src/features/MatchDetail/pages/MatchDetailPage.dart';
 import 'package:bet/src/utils/abuse/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -23,13 +21,14 @@ class Mainpage extends StatefulWidget {
 
 class _MainpageState extends State<Mainpage> {
   var controller = GetIt.instance<MainController>();
-@override
+  @override
   void initState() {
     // TODO: implement initState
-   controller.fetchMatch();
-   controller.fetchIndex();
+    controller.fetchMatch();
+    controller.fetchIndex();
     super.initState();
   }
+
   var register_controller = GetIt.instance<RegisterController>();
 
   @override
@@ -45,12 +44,12 @@ class _MainpageState extends State<Mainpage> {
       ),
       body: Observer(
         builder: (_) {
-          if (controller.status == Status.error &&controller.statusIndex ==Status.error) {
-                      return Center(child: AppText.s16w500TtM("No Internet connection"));
-                    }
-                    else if(controller.loadingIndex){
-                      return Center(child: CircularProgressIndicator());
-                    }
+          if (controller.status == Status.error &&
+              controller.statusIndex == Status.error) {
+            return Center(child: AppText.s16w500TtM("No Internet connection"));
+          } else if (controller.loadingIndex || controller.loading) {
+            return Center(child: CircularProgressIndicator());
+          }
           return CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -101,7 +100,9 @@ class _MainpageState extends State<Mainpage> {
                                   isSelect: controller.select_game == "top",
                                 ),
                                 Gametype(
-                                  icon: Assets.images.sport.image(package: "gen"),
+                                  icon: Assets.images.sport.image(
+                                    package: "gen",
+                                  ),
                                   title: "Sports",
                                   onTap: () {
                                     controller.change("sports");
@@ -109,7 +110,9 @@ class _MainpageState extends State<Mainpage> {
                                   isSelect: controller.select_game == "sports",
                                 ),
                                 Gametype(
-                                  icon: Assets.images.game.image(package: "gen"),
+                                  icon: Assets.images.game.image(
+                                    package: "gen",
+                                  ),
                                   title: "Esports",
                                   onTap: () {
                                     controller.change('esport');
@@ -117,7 +120,9 @@ class _MainpageState extends State<Mainpage> {
                                   isSelect: controller.select_game == "esport",
                                 ),
                                 Gametype(
-                                  icon: Assets.images.casino.image(package: "gen"),
+                                  icon: Assets.images.casino.image(
+                                    package: "gen",
+                                  ),
                                   title: "Casino",
                                   onTap: () {
                                     controller.change("casino");
@@ -125,7 +130,9 @@ class _MainpageState extends State<Mainpage> {
                                   isSelect: controller.select_game == "casino",
                                 ),
                                 Gametype(
-                                  icon: Assets.images.games.image(package: "gen"),
+                                  icon: Assets.images.games.image(
+                                    package: "gen",
+                                  ),
                                   isSelect: controller.select_game == "1x",
                                   title: "1xGames",
                                   onTap: () {
@@ -154,7 +161,7 @@ class _MainpageState extends State<Mainpage> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           var category = controller.index?.category?[index];
-                         
+
                           return Container(
                             alignment: Alignment.center,
                             width: 75,
@@ -170,12 +177,13 @@ class _MainpageState extends State<Mainpage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                               Icon(Icons.sports_basketball),
+                                Icon(Icons.sports_basketball),
                                 5.boxH,
                                 Expanded(
                                   child: AppText.s14w400BdM(
-                                    maxLines: 1,textAlign: TextAlign.center,
-                                    category!.name??"",
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    category!.name ?? "",
                                     color: ColorName.text,
                                   ),
                                 ),
@@ -185,7 +193,7 @@ class _MainpageState extends State<Mainpage> {
                         },
                       ),
                     ),
-          
+
                     15.boxH,
                   ],
                 ),
@@ -253,7 +261,7 @@ class _MainpageState extends State<Mainpage> {
                               horizontal: 5,
                               vertical: 5,
                             ),
-          
+
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -274,7 +282,7 @@ class _MainpageState extends State<Mainpage> {
                         },
                       ),
                     ),
-          
+
                     15.boxH,
                   ],
                 ),
@@ -306,7 +314,10 @@ class _MainpageState extends State<Mainpage> {
                         Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, right: 10),
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                right: 10,
+                              ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Assets.images.match.image(
@@ -342,181 +353,207 @@ class _MainpageState extends State<Mainpage> {
                     SizedBox(
                       height: 210,
                       child: ListView.builder(
-                        itemCount:  controller.ticket?.matches?.length,
+                        itemCount: controller.ticket?.matches?.length,
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          Match match = controller.ticket!.matches![index];
-                          return Container(
-                            padding: EdgeInsets.all(10),
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            margin: EdgeInsets.only(left: 5, right: 5),
-                            decoration: BoxDecoration(
-                              color: ColorName.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Assets.images.sport.image(
-                                          package: "gen",
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        8.boxW,
-                                        AppText.s14w400BdM(
-                                          controller.ticket?.matches?[index].cat?.name??"",
-                                          color: ColorName.text,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundColor: ColorName.bg,
-                                          radius: 15,
-                                          child: Icon(
-                                            Icons.ondemand_video_rounded,
-                                            size: 17,
-                                          ),
-                                        ),
-                                        5.boxW,
-                                        CircleAvatar(
-                                          backgroundColor: ColorName.bg,
-                                          radius: 15,
-                                          child: Icon(
-                                            Icons.notifications_none_outlined,
-                                            size: 17,
-                                          ),
-                                        ),
-                                        5.boxW,
-                                        CircleAvatar(
-                                          backgroundColor: ColorName.bg,
-                                          radius: 15,
-                                          child: Icon(
-                                            Icons.star_border,
-                                            size: 17,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                          Match? match =
+                              controller.ticket?.matches?[index] ?? Match();
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MatchDetailPage(),
                                 ),
-                                15.boxH,
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child:
-                                          // AppText.s16w400BdL("NK Varazdin", color: ColorName.text,)
-                                          Text(
-                                            match.team1 ?? "",
-                                            textDirection: TextDirection.rtl,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: ColorName.text,
-                                              fontSize: 16,
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              margin: EdgeInsets.only(left: 5, right: 5),
+                              decoration: BoxDecoration(
+                                color: ColorName.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Assets.images.sport.image(
+                                            package: "gen",
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          8.boxW,
+                                          AppText.s14w400BdM(
+                                            controller
+                                                    .ticket
+                                                    ?.matches?[index]
+                                                    .cat
+                                                    ?.name ??
+                                                "",
+                                            color: ColorName.text,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: ColorName.bg,
+                                            radius: 15,
+                                            child: Icon(
+                                              Icons.ondemand_video_rounded,
+                                              size: 17,
                                             ),
                                           ),
-                                    ),
-                                    5.boxW,
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundColor:
-                                              ColorName.emeraldGreen,
-                                          child: Icon(
-                                            Icons.person,
-                                            color: ColorName.white,
+                                          5.boxW,
+                                          CircleAvatar(
+                                            backgroundColor: ColorName.bg,
+                                            radius: 15,
+                                            child: Icon(
+                                              Icons.notifications_none_outlined,
+                                              size: 17,
+                                            ),
                                           ),
-                                        ),
-                                        7.boxW,
-                                        AppText.s16w400BdL(
-                                          "0 : 0",
-                                          color: ColorName.text,
-                                        ),
-                                        7.boxW,
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundColor:
-                                              ColorName.emeraldGreen,
-                                          child: Icon(
-                                            Icons.person,
-                                            color: ColorName.white,
+                                          5.boxW,
+                                          CircleAvatar(
+                                            backgroundColor: ColorName.bg,
+                                            radius: 15,
+                                            child: Icon(
+                                              Icons.star_border,
+                                              size: 17,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    5.boxW,
-                                    Expanded(
-                                      child: AppText.s16w400BdL(
-                                        match.team2??"",
-                                        maxLines: 2,
-                                        color: ColorName.text,
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                5.boxH,
-                                Center(
-                                  child: AppText.s12w400BdS(
-                                    "1st half, time elapsed 17:30 (0-0)",
-                                    color: ColorName.text,
+                                    ],
                                   ),
-                                ),
-                                AppText.s14w400BdM(
-                                  "1x2",
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorName.text,
-                                  textAlign: TextAlign.left,
-                                ),
-                                8.boxH,
-                                Row(
-                                  children: [
-                                    for (int i = 0; i <  match.options!.length; i++)
+                                  15.boxH,
+                                  Row(
+                                    children: [
                                       Expanded(
-                                        child: Container(
-                                          height: 40,
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 3,
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: ColorName.bg,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
+                                        child:
+                                            // AppText.s16w400BdL("NK Varazdin", color: ColorName.text,)
+                                            Text(
+                                              match.team1 ?? "",
+                                              textDirection: TextDirection.rtl,
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                color: ColorName.text,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                      ),
+                                      5.boxW,
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor:
+                                                ColorName.emeraldGreen,
+                                            child: Icon(
+                                              Icons.person,
+                                              color: ColorName.white,
                                             ),
                                           ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: AppText.s12w400BdS(
-                                                  maxLines: 2,
-                                                  match.options?[i].optionName??"",
-                                                  color: ColorName.text,
-                                                ),
-                                              ),
-                                              AppText.s12w500LbM(
-                                                match.options?[i].investAmount??"",
-                                                color: ColorName.red,
-                                              ),
-                                            ],
+                                          7.boxW,
+                                          AppText.s16w400BdL(
+                                            "0 : 0",
+                                            color: ColorName.text,
                                           ),
+                                          7.boxW,
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor:
+                                                ColorName.emeraldGreen,
+                                            child: Icon(
+                                              Icons.person,
+                                              color: ColorName.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      5.boxW,
+                                      Expanded(
+                                        child: AppText.s16w400BdL(
+                                          match.team2 ?? "",
+                                          maxLines: 2,
+                                          color: ColorName.text,
                                         ),
                                       ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  5.boxH,
+                                  Center(
+                                    child: AppText.s12w400BdS(
+                                      "1st half, time elapsed 17:30 (0-0)",
+                                      color: ColorName.text,
+                                    ),
+                                  ),
+                                  AppText.s14w400BdM(
+                                    "1x2",
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorName.text,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  8.boxH,
+                                  Row(
+                                    children: [
+                                      for (
+                                        int i = 0;
+                                        i < match.options!.length;
+                                        i++
+                                      )
+                                        Expanded(
+                                          child: Container(
+                                            height: 40,
+                                            margin: EdgeInsets.symmetric(
+                                              horizontal: 3,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 5,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: ColorName.bg,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: AppText.s12w400BdS(
+                                                    maxLines: 2,
+                                                    match
+                                                            .options?[i]
+                                                            .optionName ??
+                                                        "",
+                                                    color: ColorName.text,
+                                                  ),
+                                                ),
+                                                AppText.s12w500LbM(
+                                                  match
+                                                          .options?[i]
+                                                          .investAmount ??
+                                                      "",
+                                                  color: ColorName.red,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -544,57 +581,70 @@ class _MainpageState extends State<Mainpage> {
                         child: GridView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-          
+
                           itemCount: 12,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 0.3,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                          ),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: 40,
-                              padding: EdgeInsets.only(left: 8, right: 8),
-                              decoration: BoxDecoration(
-                                color: ColorName.white,
-                                borderRadius: BorderRadius.circular(10),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 0.3,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Assets.images.match.image(
-                                        package: "gen",
-                                        width: 40,
-                                        height: 40,
-                                      ),
-                                      AppText.s14w500LbL(
-                                        "Croatia HLM",
-                                        color: ColorName.text,
-                                      ),
-                                    ],
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MatchDetailPage(),
                                   ),
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: ColorName.count,
-                                        child: AppText.s12w500LbM(
-                                          "1",
+                                );
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                height: 40,
+                                padding: EdgeInsets.only(left: 8, right: 8),
+                                decoration: BoxDecoration(
+                                  color: ColorName.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Assets.images.match.image(
+                                          package: "gen",
+                                          width: 40,
+                                          height: 40,
+                                        ),
+                                        AppText.s14w500LbL(
+                                          "Croatia HLM",
                                           color: ColorName.text,
                                         ),
-                                      ),
-                                      5.boxW,
-                                      Icon(
-                                        Icons.star_border,
-                                        color: ColorName.dustyBlue,
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: ColorName.count,
+                                          child: AppText.s12w500LbM(
+                                            "1",
+                                            color: ColorName.text,
+                                          ),
+                                        ),
+                                        5.boxW,
+                                        Icon(
+                                          Icons.star_border,
+                                          color: ColorName.dustyBlue,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
@@ -606,7 +656,7 @@ class _MainpageState extends State<Mainpage> {
               ),
             ],
           );
-        }
+        },
       ),
     );
   }

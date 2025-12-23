@@ -6,15 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 
-void main(List<String> args)async {
-  
-    WidgetsFlutterBinding.ensureInitialized();
-      await KeyValueStorageBase.init();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await KeyValueStorageBase.init();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-   configureDependencies();
-   await GetIt.instance<RegisterController>().tokenGet();
+  configureDependencies();
+  GetIt.instance<RegisterController>().tokenGet();
   runApp(Xbet());
 }
