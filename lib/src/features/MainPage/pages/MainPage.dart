@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bet/src/core/components/AuthButton.dart';
 import 'package:bet/src/core/components/app_text.dart';
 import 'package:bet/src/core/network/states/status.dart';
@@ -25,6 +27,7 @@ class _MainpageState extends State<Mainpage> {
   void initState() {
     // TODO: implement initState
    controller.fetchMatch();
+   controller.fetchIndex();
     super.initState();
   }
   var register_controller = GetIt.instance<RegisterController>();
@@ -42,10 +45,10 @@ class _MainpageState extends State<Mainpage> {
       ),
       body: Observer(
         builder: (_) {
-          if (controller.status == Status.error) {
-                      return Container();
+          if (controller.status == Status.error &&controller.statusIndex ==Status.error) {
+                      return Center(child: AppText.s16w500TtM("No Internet connection"));
                     }
-                    else if(controller.status == Status.loading){
+                    else if(controller.loadingIndex){
                       return Center(child: CircularProgressIndicator());
                     }
           return CustomScrollView(
@@ -146,12 +149,15 @@ class _MainpageState extends State<Mainpage> {
                       width: double.infinity,
                       height: 70,
                       child: ListView.builder(
-                        itemCount: 10,
+                        itemCount: controller.index?.category?.length,
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
+                          var category = controller.index?.category?[index];
+                         
                           return Container(
                             alignment: Alignment.center,
+                            width: 75,
                             margin: EdgeInsets.symmetric(horizontal: 5),
                             padding: EdgeInsets.symmetric(
                               horizontal: 5,
@@ -164,15 +170,14 @@ class _MainpageState extends State<Mainpage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Assets.images.sport.image(
-                                  package: "gen",
-                                  width: 25,
-                                  height: 25,
-                                ),
+                               Icon(Icons.sports_basketball),
                                 5.boxH,
-                                AppText.s14w400BdM(
-                                  "Footbol",
-                                  color: ColorName.text,
+                                Expanded(
+                                  child: AppText.s14w400BdM(
+                                    maxLines: 1,textAlign: TextAlign.center,
+                                    category!.name??"",
+                                    color: ColorName.text,
+                                  ),
                                 ),
                               ],
                             ),

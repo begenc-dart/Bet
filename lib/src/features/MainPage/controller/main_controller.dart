@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bet/src/core/network/states/status.dart';
 import 'package:bet/src/features/MainPage/repository/data/MatchData.dart';
+import 'package:bet/src/features/MainPage/repository/dto/IndexDto.dart';
 import 'package:bet/src/features/MainPage/repository/dto/match_dto.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -29,7 +30,7 @@ abstract class _MainController with Store {
     try {
       loading = true;
       status = Status.loading;
-      final result = await api.getMatchData();
+      final result = await api.getIndexDto();
       log(result.toString());  
           ticket = result;
       status = Status.completed;
@@ -38,6 +39,33 @@ abstract class _MainController with Store {
     } catch (e) {
       status = Status.error;
         loading = false;
+      return false;
+    }
+  }
+   @observable
+  IndexDto? index ;
+  @observable
+  bool loadingIndex = false;
+  @observable
+  Status statusIndex = Status.none;
+
+  @action
+  Future<bool> fetchIndex() async {
+    try {
+      loadingIndex = true;
+      statusIndex = Status.loading;
+      final result = await api.getIndex();
+      // log(result.category![0].name.toString());
+      log(result.toString());
+          index = result;
+      statusIndex = Status.completed;
+      loadingIndex = false;
+      return true;
+    } catch (e,s) {
+      log(e.toString());
+      log(s.toString());
+      statusIndex = Status.error;
+        loadingIndex = false;
       return false;
     }
   }

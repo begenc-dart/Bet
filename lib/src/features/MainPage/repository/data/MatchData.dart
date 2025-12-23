@@ -3,13 +3,14 @@ import 'dart:developer';
 
 import 'package:bet/src/core/network/dio_helper.dart';
 import 'package:bet/src/features/CuponPage/repository/dto/ticket_dto.dart';
+import 'package:bet/src/features/MainPage/repository/dto/IndexDto.dart';
 import 'package:bet/src/features/MainPage/repository/dto/match_dto.dart';
 import 'package:dio/dio.dart';
 
 class MatchData {
    final _dio = DioHelper.instance;
   
-  Future<MatchDto> getMatchData() async {
+  Future<MatchDto> getIndexDto() async {
     try {
       final response = await _dio.get(
         "api/all-matches",
@@ -24,6 +25,26 @@ class MatchData {
         throw Exception("Failed to post Credit card ${response.statusCode}");
       }
     } catch (e) {
+      throw Exception(e);
+    }
+  }
+   Future<IndexDto> getIndex() async {
+    try {
+      final response = await _dio.get(
+        "api/index",
+       
+      );
+     
+      if (response.statusCode == 200) {
+       
+        IndexDto model = IndexDto.fromJson(response.data);
+        return model;
+      } else {
+        throw Exception("Failed to post Credit card ${response.statusCode}");
+      }
+    } catch (e,s) {
+      log(e.toString());
+      log(s.toString());
       throw Exception(e);
     }
   }

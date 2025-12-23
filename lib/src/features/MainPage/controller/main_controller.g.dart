@@ -81,6 +81,60 @@ mixin _$MainController on _MainController, Store {
     });
   }
 
+  late final _$indexAtom = Atom(
+    name: '_MainController.index',
+    context: context,
+  );
+
+  @override
+  IndexDto? get index {
+    _$indexAtom.reportRead();
+    return super.index;
+  }
+
+  @override
+  set index(IndexDto? value) {
+    _$indexAtom.reportWrite(value, super.index, () {
+      super.index = value;
+    });
+  }
+
+  late final _$loadingIndexAtom = Atom(
+    name: '_MainController.loadingIndex',
+    context: context,
+  );
+
+  @override
+  bool get loadingIndex {
+    _$loadingIndexAtom.reportRead();
+    return super.loadingIndex;
+  }
+
+  @override
+  set loadingIndex(bool value) {
+    _$loadingIndexAtom.reportWrite(value, super.loadingIndex, () {
+      super.loadingIndex = value;
+    });
+  }
+
+  late final _$statusIndexAtom = Atom(
+    name: '_MainController.statusIndex',
+    context: context,
+  );
+
+  @override
+  Status get statusIndex {
+    _$statusIndexAtom.reportRead();
+    return super.statusIndex;
+  }
+
+  @override
+  set statusIndex(Status value) {
+    _$statusIndexAtom.reportWrite(value, super.statusIndex, () {
+      super.statusIndex = value;
+    });
+  }
+
   late final _$fetchMatchAsyncAction = AsyncAction(
     '_MainController.fetchMatch',
     context: context,
@@ -89,6 +143,16 @@ mixin _$MainController on _MainController, Store {
   @override
   Future<bool> fetchMatch() {
     return _$fetchMatchAsyncAction.run(() => super.fetchMatch());
+  }
+
+  late final _$fetchIndexAsyncAction = AsyncAction(
+    '_MainController.fetchIndex',
+    context: context,
+  );
+
+  @override
+  Future<bool> fetchIndex() {
+    return _$fetchIndexAsyncAction.run(() => super.fetchIndex());
   }
 
   late final _$_MainControllerActionController = ActionController(
@@ -114,7 +178,10 @@ mixin _$MainController on _MainController, Store {
 select_game: ${select_game},
 ticket: ${ticket},
 loading: ${loading},
-status: ${status}
+status: ${status},
+index: ${index},
+loadingIndex: ${loadingIndex},
+statusIndex: ${statusIndex}
     ''';
   }
 }
