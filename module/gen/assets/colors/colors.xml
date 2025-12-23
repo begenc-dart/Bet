@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="dusty_blue">#5580a1</color>
+    <color name = "azure_blue">#2a5446</color>
+    <color name = "fresh_green">#4bb869</color>
+    <color name = "bg">#ebeef3</color>
+    <color name = "text">#002a50</color>
+    <color name = "emerald_green">#99b2c5</color>
+    <color name = "red">#fe362b</color>
+    <color name = "count">#dbe2ec</color>
+    <color name = "text2">#13322c</color>
+    <color name = "green">#2a5446</color>
+    <color name = "iconColor">#aabcc9</color>
+    <color name = "circleColor">#ededf3</color>
+</resources>
