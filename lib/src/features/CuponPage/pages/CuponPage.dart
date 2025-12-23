@@ -40,7 +40,7 @@ class _CouponPageState extends State<CouponPage> {
               }
               return _buildActionButton(
               'Пополнить счет',
-              'Ваш баланс: ${controller.favourity!.supports!.total} USD',
+              'Ваш баланс: ${controller.ticket!.supports!.total} USD',
               Icons.add,
               Colors.green,
               Colors.white,

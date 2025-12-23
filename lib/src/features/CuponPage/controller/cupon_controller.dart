@@ -10,7 +10,7 @@ class CuponController = _CuponController with _$CuponController;
 abstract class _CuponController with Store {
    Cuponrepository api = Cuponrepository();
   @observable
-  TicketDto? favourity ;
+  TicketDto? ticket ;
   @observable
   bool loading = false;
   @observable
@@ -23,7 +23,7 @@ abstract class _CuponController with Store {
       status = Status.loading;
       final result = await api.getFavourityProduct();
       
-      favourity = result;
+      ticket = result;
       status = Status.completed;
       loading = false;
       return true;

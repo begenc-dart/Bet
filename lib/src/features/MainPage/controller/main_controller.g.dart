@@ -27,6 +27,70 @@ mixin _$MainController on _MainController, Store {
     });
   }
 
+  late final _$ticketAtom = Atom(
+    name: '_MainController.ticket',
+    context: context,
+  );
+
+  @override
+  MatchDto? get ticket {
+    _$ticketAtom.reportRead();
+    return super.ticket;
+  }
+
+  @override
+  set ticket(MatchDto? value) {
+    _$ticketAtom.reportWrite(value, super.ticket, () {
+      super.ticket = value;
+    });
+  }
+
+  late final _$loadingAtom = Atom(
+    name: '_MainController.loading',
+    context: context,
+  );
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  late final _$statusAtom = Atom(
+    name: '_MainController.status',
+    context: context,
+  );
+
+  @override
+  Status get status {
+    _$statusAtom.reportRead();
+    return super.status;
+  }
+
+  @override
+  set status(Status value) {
+    _$statusAtom.reportWrite(value, super.status, () {
+      super.status = value;
+    });
+  }
+
+  late final _$fetchMatchAsyncAction = AsyncAction(
+    '_MainController.fetchMatch',
+    context: context,
+  );
+
+  @override
+  Future<bool> fetchMatch() {
+    return _$fetchMatchAsyncAction.run(() => super.fetchMatch());
+  }
+
   late final _$_MainControllerActionController = ActionController(
     name: '_MainController',
     context: context,
@@ -47,7 +111,10 @@ mixin _$MainController on _MainController, Store {
   @override
   String toString() {
     return '''
-select_game: ${select_game}
+select_game: ${select_game},
+ticket: ${ticket},
+loading: ${loading},
+status: ${status}
     ''';
   }
 }
