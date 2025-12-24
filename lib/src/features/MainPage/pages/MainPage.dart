@@ -5,12 +5,16 @@ import 'package:bet/src/features/MainPage/controller/main_controller.dart';
 import 'package:bet/src/features/MainPage/repository/dto/match_dto.dart';
 import 'package:bet/src/features/MainPage/widget/GameType.dart';
 import 'package:bet/src/features/MatchDetail/pages/MatchDetailPage.dart';
+import 'package:bet/src/features/TopChampions/pages/TopChampionsPage.dart';
 import 'package:bet/src/utils/abuse/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gen/gen.dart';
 import 'package:get_it/get_it.dart';
+import 'package:bet/src/features/LeagueMatches/pages/LeagueMatchesPage.dart';
+import 'package:bet/src/features/Search/pages/SearchPage.dart';
+import 'package:bet/src/features/OneXGames/pages/OneXGamesPage.dart';
 
 class Mainpage extends StatefulWidget {
   Mainpage({super.key});
@@ -38,7 +42,15 @@ class _MainpageState extends State<Mainpage> {
         backgroundColor: ColorName.white,
         elevation: 0,
         actions: [
-          Icon(Icons.search, color: ColorName.dustyBlue),
+          IconButton(
+            icon: Icon(Icons.search, color: ColorName.dustyBlue),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchPage()),
+              );
+            },
+          ),
           10.boxW,
         ],
       ),
@@ -254,29 +266,38 @@ class _MainpageState extends State<Mainpage> {
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 5,
-                              vertical: 5,
-                            ),
-
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    "https://www.ggrasia.com/wp-content/uploads/2022/05/Wild-West-Gold-Pragmatic-e1653952729455.jpg",
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OneXGamesPage(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5,
+                                vertical: 5,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      "https://www.ggrasia.com/wp-content/uploads/2022/05/Wild-West-Gold-Pragmatic-e1653952729455.jpg",
+                                    ),
+                                    radius: 30,
                                   ),
-                                  radius: 30,
-                                ),
-                                5.boxH,
-                                AppText.s14w400BdM(
-                                  "All Games",
-                                  color: ColorName.text,
-                                ),
-                              ],
+                                  5.boxH,
+                                  AppText.s14w400BdM(
+                                    "All Games",
+                                    color: ColorName.text,
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -300,38 +321,48 @@ class _MainpageState extends State<Mainpage> {
               ),
               SliverList.builder(
                 itemBuilder: (context, index) {
-                  return Container(
-                    width: double.infinity,
-                    height: 80,
-                    margin: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: ColorName.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Assets.images.match.image(
-                                  package: "gen",
-                                  width: 60.h,
-                                  height: 60.w,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TopChampionsPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 80,
+                      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: ColorName.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Assets.images.match.image(
+                                    package: "gen",
+                                    width: 60.h,
+                                    height: 60.w,
+                                  ),
                                 ),
                               ),
-                            ),
-                            AppText.s16w500TtM("1XChampion"),
-                          ],
-                        ),
-                        Assets.images.fottball.image(package: "gen"),
-                      ],
+                              AppText.s16w500TtM("1XChampion"),
+                            ],
+                          ),
+                          Assets.images.fottball.image(package: "gen"),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -597,7 +628,9 @@ class _MainpageState extends State<Mainpage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const MatchDetailPage(),
+                                        const LeagueMatchesPage(
+                                          leagueName: "Croatia HLM",
+                                        ),
                                   ),
                                 );
                               },
