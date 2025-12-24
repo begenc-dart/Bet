@@ -1,186 +1,214 @@
-import 'package:bet/src/core/components/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gen/gen.dart';
+import 'package:bet/src/core/components/app_text.dart';
 
-class MatchHeader extends StatelessWidget {
+class MatchHeader extends StatefulWidget {
   const MatchHeader({super.key});
+
+  @override
+  State<MatchHeader> createState() => _MatchHeaderState();
+}
+
+class _MatchHeaderState extends State<MatchHeader> {
+  late PageController _pageController;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: ColorName.text, // Dark blue background
-        // image: DecorationImage(
-        //   image: Assets.images.match.provider(), // Background image
-        //   fit: BoxFit.cover,
-        //   colorFilter: ColorFilter.mode(
-        //     ColorName.text.withOpacity(0.85),
-        //     BlendMode.darken, // Darken the image
-        //   ),
-        // ),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF2E3034)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Content padding top for status bar area (approx)
-          SizedBox(height: 100.h),
-
-          // League Info
-          Column(
-            children: [
-              AppText.s16w500TtM(
-                "Football. England.\nLeague Cup",
-                color: ColorName.white,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 4.h),
-              AppText.s12w400BdS(
-                "Round of 8. England",
-                color: ColorName.white.withOpacity(0.7),
-              ),
-            ],
+          // Subheader Info
+          AppText.s14w400BdM(
+            "4x12. Including Overtime. USA",
+            color: Colors.white.withOpacity(0.6),
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 10.h),
 
-          // Teams & Score
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Carousel
+          SizedBox(
+            height: 200.h,
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
               children: [
-                _buildTeam(
-                  "Arsenal",
-                  Assets.images.fottball.provider(), // Placeholder
-                ),
-                Column(
-                  children: [
-                    AppText.s24w600HlS("VS", color: ColorName.white),
-                    SizedBox(height: 8.h),
-                    AppText.s12w400BdS(
-                      "Starts in",
-                      color: ColorName.white.withOpacity(0.7),
-                    ),
-                    AppText.s20w500TtL("02 : 31 : 53", color: ColorName.white),
-                    SizedBox(height: 8.h),
-                    AppText.s12w400BdS(
-                      "24.12.2025 (01:00)",
-                      color: ColorName.white,
-                    ),
-                  ],
-                ),
-                _buildTeam(
-                  "Crystal Palace",
-                  Assets.images.fottball.provider(), // Placeholder
-                ),
+                _buildScorePage(),
+                _buildStatsPage("Possession", "52% - 48%"),
+                _buildStatsPage("Shots", "15 - 12"),
               ],
             ),
           ),
 
-          SizedBox(height: 24.h),
-
-          // Tabs (Handicap, Players, etc.)
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Row(
-              children: [
-                _buildTab("Handicap", true),
-                _buildTab("Players", false),
-                _buildTab("Goals", false),
-                _buildTab("Intervals", false),
-              ],
-            ),
+          // Pagination Indicator
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (index) {
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: EdgeInsets.symmetric(horizontal: 2.w),
+                width: index == _currentPage ? 12.w : 6.w,
+                height: 2.h,
+                decoration: BoxDecoration(
+                  color: index == _currentPage
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              );
+            }),
           ),
 
           SizedBox(height: 16.h),
+        ],
+      ),
+    );
+  }
 
-          // Sub Tabs (2nd half, Offsides...)
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
-            color: Colors.black.withOpacity(0.3),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(Icons.list, color: ColorName.white, size: 20.sp),
-                  SizedBox(width: 20.w),
-                  _buildSubTab("2nd half"),
-                  _buildSubTab("Offsides"),
-                  _buildSubTab("Offsides. 1st half"),
-                  _buildSubTab("VAR Checks"),
-                ],
+  Widget _buildScorePage() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildTeam(
+            "Atlanta Hawks",
+            "https://upload.wikimedia.org/wikipedia/en/thumb/2/24/Atlanta_Hawks_logo.svg/200px-Atlanta_Hawks_logo.svg.png",
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "61 : 49",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
+              SizedBox(height: 8.h),
+              Text(
+                "time elapsed:",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.5),
+                  fontSize: 12.sp,
+                ),
+              ),
+              Text(
+                "22 : 00",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          _buildTeam(
+            "Chicago Bulls",
+            "https://upload.wikimedia.org/wikipedia/en/thumb/6/67/Chicago_Bulls_logo.svg/200px-Chicago_Bulls_logo.svg.png",
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTeam(String name, ImageProvider logo) {
+  Widget _buildStatsPage(String title, String value) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Stack(
-          children: [
-            // Image(image: logo, width: 60.w, height: 60.w),
-            Icon(Icons.sports_soccer, size: 60.w, color: Colors.white),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_border,
-                color: Colors.blue,
-                size: 20.sp,
-              ), // Star icon
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h),
-        SizedBox(
-          width: 80.w,
-          // fixed maxLines typo and AppText
-          child: AppText.s14w400BdM(
-            name,
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w500,
-            color: ColorName.white,
-            textAlign: TextAlign.center,
-            maxLines: 2,
           ),
+        ),
+        SizedBox(height: 12.h),
+        Text(
+          value,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        Text(
+          "4x12 Including Overtime, 2nd quarter, (36-30, 25-19)",
+          style: TextStyle(color: Colors.white60, fontSize: 12.sp),
+          textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
-  Widget _buildTab(String text, bool isSelected) {
-    return Container(
-      margin: EdgeInsets.only(right: 8.w),
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-      ),
-      // fixed AppText
-      child: AppText.s14w400BdM(
-        text,
-        fontWeight: FontWeight.w500,
-        color: ColorName.white,
-      ),
-    );
-  }
-
-  Widget _buildSubTab(String text) {
-    return Padding(
-      padding: EdgeInsets.only(right: 20.w),
-      // fixed AppText
-      child: AppText.s12w400BdS(text, color: ColorName.white.withOpacity(0.7)),
+  Widget _buildTeam(String name, String logoUrl) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(
+          children: [
+            Container(
+              width: 70.w,
+              height: 70.w,
+              padding: EdgeInsets.all(4.w),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.person, size: 50.w, color: Colors.white70),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF408CDC),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF2E3034), width: 2),
+                ),
+                child: Icon(Icons.star, color: Colors.white, size: 10.sp),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        SizedBox(
+          width: 90.w,
+          child: Text(
+            name,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+          ),
+        ),
+      ],
     );
   }
 }

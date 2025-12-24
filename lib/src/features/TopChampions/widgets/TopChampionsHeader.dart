@@ -94,12 +94,12 @@ class TopChampionsHeader extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
               labelStyle: TextStyle(
-                fontSize: 9.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 // fontFamily: 'Montserrat', // Using default font to match others or if user provided font availability
               ),
               unselectedLabelStyle: TextStyle(
-                fontSize: 9.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
               tabs: const [

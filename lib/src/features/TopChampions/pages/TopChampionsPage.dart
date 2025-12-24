@@ -90,7 +90,7 @@ class _TopChampionsPageState extends State<TopChampionsPage>
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: isSelected ? Colors.white : Colors.black87,
-                            fontSize: 10.sp,
+                            fontSize: 12.sp,
                             fontWeight: isSelected
                                 ? FontWeight.w600
                                 : FontWeight.w400,

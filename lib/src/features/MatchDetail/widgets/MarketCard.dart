@@ -1,12 +1,10 @@
-import 'package:bet/src/core/components/app_text.dart';
 import 'package:bet/src/features/MatchDetail/widgets/OddsButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gen/gen.dart';
 
 class MarketCard extends StatefulWidget {
   final String title;
-  final List<Map<String, String>> odds; // [{'label': 'W1', 'value': '5'}, ...]
+  final List<Map<String, String>> odds;
   final bool isExpanded;
   final VoidCallback? onExpand;
 
@@ -35,9 +33,9 @@ class _MarketCardState extends State<MarketCard> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: ColorName.white,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
@@ -52,45 +50,76 @@ class _MarketCardState extends State<MarketCard> {
               }
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // fixed AppText usage
-                AppText.s14w400BdM(
+                Text(
                   widget.title,
-                  fontWeight: FontWeight.w600,
-                  color: ColorName.text,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF0D2338),
+                  ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
-                  Icons.push_pin_outlined, // Pin icon
-                  size: 18.sp,
-                  color: ColorName.iconColor,
+                  Icons.push_pin_outlined,
+                  size: 20.sp,
+                  color: Colors.grey.shade400,
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: 12.w),
                 Icon(
                   _isExpanded
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
-                  color: ColorName.dustyBlue,
+                  color: const Color(0xFF408CDC),
+                  size: 24.sp,
                 ),
               ],
             ),
           ),
-          if (_isExpanded) ...[
-            SizedBox(height: 12.h),
-            Row(
+          if (_isExpanded) ...[SizedBox(height: 12.h), _buildOddsGrid()],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOddsGrid() {
+    // If we have many odds, we might want a grid or multiple rows
+    // For simplicity, let's group them by pairs if it's more than 3
+    if (widget.odds.length > 3) {
+      List<Widget> rows = [];
+      for (int i = 0; i < widget.odds.length; i += 2) {
+        int end = (i + 2 < widget.odds.length) ? i + 2 : widget.odds.length;
+        rows.add(
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: Row(
               children: widget.odds
+                  .sublist(i, end)
                   .map(
                     (odd) => OddsButton(
                       label: odd['label'] ?? '',
                       value: odd['value'] ?? '',
+                      trend: odd['trend'],
                     ),
                   )
                   .toList(),
             ),
-          ],
-        ],
-      ),
+          ),
+        );
+      }
+      return Column(children: rows);
+    }
+
+    return Row(
+      children: widget.odds
+          .map(
+            (odd) => OddsButton(
+              label: odd['label'] ?? '',
+              value: odd['value'] ?? '',
+              trend: odd['trend'],
+            ),
+          )
+          .toList(),
     );
   }
 }
